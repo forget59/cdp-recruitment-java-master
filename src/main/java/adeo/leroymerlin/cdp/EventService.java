@@ -29,4 +29,13 @@ public class EventService {
 
         return events;
     }
+
+    public void update(Long id, Event event) {
+        eventRepository.findById(id)
+                .ifPresent(existingEvent -> {
+                    existingEvent.setComment(event.getComment());
+                    existingEvent.setNbStars(event.getNbStars());
+                    eventRepository.save(existingEvent);
+                });
+    }
 }
