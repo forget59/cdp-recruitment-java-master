@@ -1,0 +1,3 @@
+pom check
+entities OK
+repository warn. @Transactionnal should be in the Service for the good gestion of the global transaction.
