@@ -21,6 +21,6 @@ class EventWithCountMapperImplTest {
         EventWithCountViewDto eventWithCountDto = eventWithCountMapper.toEventWithCountDto(event);
 
         assertNotNull(eventWithCountDto);
-        assertEquals("Test Event [0]", eventWithCountDto.name());
+        assertEquals("Test Event [0]", eventWithCountDto.title());
     }
 }

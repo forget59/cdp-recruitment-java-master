@@ -1,8 +1,6 @@
 package adeo.leroymerlin.cdp.band;
 
-import adeo.leroymerlin.cdp.event.EventMapperImpl;
 import adeo.leroymerlin.cdp.member.Member;
-import adeo.leroymerlin.cdp.member.MemberMapper;
 import adeo.leroymerlin.cdp.member.MemberMapperImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

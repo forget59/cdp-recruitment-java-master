@@ -11,8 +11,14 @@ public class EventService {
 
     private final EventRepository eventRepository;
 
-    public EventService(EventRepository eventRepository) {
+    private final EventMapper eventMapper;
+
+    private final EventWithCountMapper eventWithCountMapper;
+
+    public EventService(EventRepository eventRepository, EventMapper eventMapper, EventWithCountMapper eventWithCountMapper) {
         this.eventRepository = eventRepository;
+        this.eventMapper = eventMapper;
+        this.eventWithCountMapper = eventWithCountMapper;
     }
 
     public List<Event> getEvents() {
@@ -23,18 +29,19 @@ public class EventService {
         eventRepository.deleteById(id);
     }
 
-    public List<Event> getFilteredEvents(String query) {
-        List<Event> events = eventRepository.findAll();
-        // Filter the events list in pure JAVA here
-
-        return events;
+    public List<EventWithCountViewDto> getFilteredEvents(String query) {
+        return eventRepository.findAll().stream()
+                .filter(EventPredicates.eventBandsContainMemberWith(query))
+                .map(eventWithCountMapper::toEventWithCountDto)
+                .toList();
     }
 
-    public void update(Long id, Event event) {
+    public void update(Long id, EventDto event) {
+        Event eventEntity = eventMapper.toEntity(event);
         eventRepository.findById(id)
                 .ifPresent(existingEvent -> {
-                    existingEvent.setComment(event.getComment());
-                    existingEvent.setNbStars(event.getNbStars());
+                    existingEvent.setComment(eventEntity.getComment());
+                    existingEvent.setNbStars(eventEntity.getNbStars());
                     eventRepository.save(existingEvent);
                 });
     }
