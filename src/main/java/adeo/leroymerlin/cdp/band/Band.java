@@ -1,5 +1,6 @@
-package adeo.leroymerlin.cdp;
+package adeo.leroymerlin.cdp.band;
 
+import adeo.leroymerlin.cdp.member.Member;
 import jakarta.persistence.*;
 import java.util.Set;
 

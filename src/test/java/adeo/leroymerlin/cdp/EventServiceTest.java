@@ -1,5 +1,8 @@
 package adeo.leroymerlin.cdp;
 
+import adeo.leroymerlin.cdp.event.Event;
+import adeo.leroymerlin.cdp.event.EventRepository;
+import adeo.leroymerlin.cdp.event.EventService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

@@ -1,4 +1,4 @@
-package adeo.leroymerlin.cdp;
+package adeo.leroymerlin.cdp.event;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

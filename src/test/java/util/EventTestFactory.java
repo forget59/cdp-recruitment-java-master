@@ -1,6 +1,6 @@
 package util;
 
-import adeo.leroymerlin.cdp.Event;
+import adeo.leroymerlin.cdp.event.Event;
 
 public class EventTestFactory {
     private static int id;
