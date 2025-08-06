@@ -1,18 +1,22 @@
 package adeo.leroymerlin.cdp.band;
 
+import adeo.leroymerlin.cdp.event.EventMapperImpl;
 import adeo.leroymerlin.cdp.member.Member;
 import adeo.leroymerlin.cdp.member.MemberMapper;
 import adeo.leroymerlin.cdp.member.MemberMapperImpl;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringJUnitConfig(classes = {BandMapperImpl.class, MemberMapperImpl.class})
 class BandMapperImplTest {
 
-    private final MemberMapper memberMapper = new MemberMapperImpl();
-    private final BandMapper bandMapper = new BandMapperImpl(memberMapper);
+    @Autowired
+    private BandMapper bandMapper;
 
     @Test
     void toDto() {
