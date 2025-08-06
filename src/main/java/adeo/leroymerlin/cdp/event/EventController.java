@@ -20,7 +20,7 @@ public class EventController {
     }
 
     @GetMapping(value = "/search/{query}")
-    public List<Event> findEvents(@PathVariable String query) {
+    public List<EventWithCountViewDto> findEvents(@PathVariable String query) {
         return eventService.getFilteredEvents(query);
     }
 
@@ -30,7 +30,7 @@ public class EventController {
     }
 
     @PutMapping(value = "/{id}")
-    public void updateEvent(@PathVariable Long id, @RequestBody Event event) {
+    public void updateEvent(@PathVariable Long id, @RequestBody EventDto event) {
         eventService.update(id, event);
     }
 }
