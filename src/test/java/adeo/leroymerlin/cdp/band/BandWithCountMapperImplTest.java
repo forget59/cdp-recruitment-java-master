@@ -16,7 +16,7 @@ class BandWithCountMapperImplTest {
 
 
     @Test
-    void toDto() {
+    void toDto_ShouldReturnDtoWithOneMembers() {
         Band band = new Band();
         band.setName("Test Band");
         band.setMembers(Set.of(new Member()));
@@ -24,5 +24,16 @@ class BandWithCountMapperImplTest {
 
         assertNotNull(res);
         assertEquals("Test Band [1]", res.name());
+    }
+
+    @Test
+    void toDto_ShouldReturnDtoWithNoMembers() {
+        Band band = new Band();
+        band.setName("Test Band");
+        band.setMembers(Set.of());
+        BandWithCountViewDto res = bandWithCountMapper.toDto(band);
+
+        assertNotNull(res);
+        assertEquals("Test Band [0]", res.name());
     }
 }

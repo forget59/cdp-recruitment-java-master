@@ -1,5 +1,9 @@
 package adeo.leroymerlin.cdp.event;
 
+import adeo.leroymerlin.cdp.band.Band;
+import adeo.leroymerlin.cdp.band.BandWithCountViewDto;
+import adeo.leroymerlin.cdp.member.Member;
+import adeo.leroymerlin.cdp.member.MemberDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import util.EventTestFactory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -46,7 +51,7 @@ class EventServiceTest {
 
     @Test
     void delete_ShouldDeleteEventById() {
-        Long eventId = (Long) 1L;
+        Long eventId = 1L;
 
         doNothing().when(eventRepository).deleteById(eventId);
 
@@ -57,7 +62,7 @@ class EventServiceTest {
 
     @Test
     void update_ShouldUpdateEvent() {
-        Long id = (Long) 1L;
+        Long id = 1L;
         EventDto dto = new EventDto(
                 "Updated Event",
                 "http://example.com/updated.jpg",
@@ -88,6 +93,69 @@ class EventServiceTest {
 
     @Test
     void getFilteredEvents_ShouldReturnFilteredEvents() {
+        Member james = new Member();
+        james.setName("James Hetfield");
 
+        Member lars = new Member();
+        lars.setName("Lars Ulrich");
+
+        Band metallica = new Band();
+        metallica.setMembers(Set.of(james, lars));
+
+        Event hellfest = EventTestFactory.createEventWithName("Hellfest");
+        hellfest.setBands(Set.of(metallica));
+
+        Event sylak = EventTestFactory.createEventWithName("Sylak Open Air");
+        Band slayer = new Band();
+        slayer.setMembers(Set.of());
+        sylak.setBands(Set.of(slayer));
+
+        when(eventRepository.findAll()).thenReturn(List.of(hellfest, sylak));
+
+        BandWithCountViewDto metallicaDto = new BandWithCountViewDto("Metallica", Set.of(new MemberDto("James Hetfield"), new MemberDto("Lars Ulrich")));
+        BandWithCountViewDto slayerDto = new BandWithCountViewDto("Slayer", Set.of());
+        EventWithCountViewDto hellfestDto = new EventWithCountViewDto("Hellfest", "https://example.com/hellfest.jpg", Set.of(metallicaDto, slayerDto), 5, "Best festival ever!");
+        when(eventWithCountMapper.toEventWithCountDto(hellfest)).thenReturn(hellfestDto);
+
+        List<EventWithCountViewDto> result = eventService.getFilteredEvents("James");
+
+        assertEquals(1, result.size());
+        assertEquals("Hellfest [2]", result.getFirst().title());
+
+        verify(eventRepository, times(1)).findAll();
+        verify(eventWithCountMapper, times(1)).toEventWithCountDto(hellfest);
+        verify(eventWithCountMapper, never()).toEventWithCountDto(sylak);
+    }
+
+    @Test
+    void getFilteredEvents_ShouldReturnEmptyListWhenNoMatch() {
+        Member james = new Member();
+        james.setName("James Hetfield");
+
+        Member lars = new Member();
+        lars.setName("Lars Ulrich");
+
+        Band metallica = new Band();
+        metallica.setMembers(Set.of(james, lars));
+
+        Event hellfest = EventTestFactory.createEventWithName("Hellfest");
+        hellfest.setBands(Set.of(metallica));
+
+        Event sylak = EventTestFactory.createEventWithName("Sylak Open Air");
+        Band slayer = new Band();
+        slayer.setMembers(Set.of());
+        sylak.setBands(Set.of(slayer));
+
+        when(eventRepository.findAll()).thenReturn(List.of(hellfest, sylak));
+
+        BandWithCountViewDto metallicaDto = new BandWithCountViewDto("Metallica", Set.of(new MemberDto("James Hetfield"), new MemberDto("Lars Ulrich")));
+        BandWithCountViewDto slayerDto = new BandWithCountViewDto("Slayer", Set.of());
+
+        List<EventWithCountViewDto> result = eventService.getFilteredEvents("Nonexistent Member");
+
+        assertEquals(Collections.emptyList(), result);
+        verify(eventRepository, times(1)).findAll();
+        verify(eventWithCountMapper, never()).toEventWithCountDto(hellfest);
+        verify(eventWithCountMapper, never()).toEventWithCountDto(sylak);
     }
 }

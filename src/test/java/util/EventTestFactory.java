@@ -17,7 +17,7 @@ public class EventTestFactory {
     public static Event createEventWithName(String name) {
         Event event = new Event();
         event.setTitle(name);
-        event.setId(Long.valueOf((long) id++));
+        event.setId(Long.valueOf(id++));
         return event;
     }
 
